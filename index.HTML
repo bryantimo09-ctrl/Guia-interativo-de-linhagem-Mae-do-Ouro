@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Mãe-do-Ouro — Guia da Linhagem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#100b07;
+    --panel:#1b130c;
+    --panel-2:#231911;
+    --border:rgba(220,159,78,0.22);
+    --border-strong:rgba(220,159,78,0.45);
+    --gold:#dc9f4e;
+    --gold-bright:#f2c374;
+    --gold-deep:#7a4f1f;
+    --ember:#c1502e;
+    --ember-soft:rgba(193,80,46,0.16);
+    --cream:#f2e6cf;
+    --muted:#a8967a;
+    --shadow: 0 10px 30px rgba(0,0,0,0.45);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      linear-gradient(to top, rgba(197,86,32,0.38), rgba(197,86,32,0) 55%),
+      radial-gradient(ellipse at 20% -10%, rgba(220,159,78,0.10), transparent 45%),
+      radial-gradient(ellipse at 90% 0%, rgba(193,80,46,0.08), transparent 40%),
+      var(--bg);
+    color:var(--cream);
+    font-family:'Work Sans', sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  .app{
+    max-width:480px;
+    margin:0 auto;
+    min-height:100vh;
+    position:relative;
+    padding-bottom:48px;
+  }
+
+  /* Header */
+  header{
+    position:sticky;
+    top:0;
+    z-index:20;
+    background:linear-gradient(180deg, var(--bg) 78%, transparent);
+    padding:22px 20px 10px;
+  }
+  .crest{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .crest-mark{
+    width:34px;height:34px;flex:none;
+    border-radius:50%;
+    border:1.5px solid var(--border-strong);
+    display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(circle at 35% 30%, var(--gold-bright), var(--gold) 55%, var(--gold-deep) 100%);
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.35);
+  }
+  .crest-mark svg{width:16px;height:16px;}
+  h1{
+    font-family:'Cinzel', serif;
+    font-weight:700;
+    font-size:1.5rem;
+    letter-spacing:0.02em;
+    margin:0;
+    color:var(--gold-bright);
+    line-height:1.1;
+  }
+  .kicker{
+    font-size:0.72rem;
+    color:var(--muted);
+    margin-top:2px;
+    letter-spacing:0.04em;
+  }
+
+  /* Segmented tabs */
+  .tabs{
+    display:flex;
+    gap:4px;
+    margin:18px 20px 0;
+    border-bottom:1px solid var(--border);
+  }
+  .tab-btn{
+    flex:1;
+    background:none;
+    border:none;
+    color:var(--muted);
+    font-family:'Cinzel', serif;
+    font-size:0.82rem;
+    letter-spacing:0.01em;
+    padding:10px 4px 12px;
+    cursor:pointer;
+    position:relative;
+    transition:color .2s ease;
+  }
+  .tab-btn.active{ color:var(--gold-bright); }
+  .tab-btn::after{
+    content:'';
+    position:absolute;
+    left:8%;right:8%;bottom:-1px;
+    height:2px;
+    background:var(--gold);
+    transform:scaleX(0);
+    transform-origin:center;
+    transition:transform .25s ease;
+    border-radius:2px;
+  }
+  .tab-btn.active::after{ transform:scaleX(1); }
+
+  main{ padding:18px 20px 0; }
+  section.panel{ display:none; }
+  section.panel.active{ display:block; animation:fadein .25s ease; }
+  @keyframes fadein{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;} }
+
+  /* Level chips */
+  .levels{
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    padding:2px 2px 14px;
+    margin-bottom:4px;
+    scrollbar-width:none;
+  }
+  .levels::-webkit-scrollbar{ display:none; }
+  .level-chip{
+    flex:none;
+    width:44px;height:44px;
+    border-radius:50%;
+    border:1.5px solid var(--border-strong);
+    background:var(--panel);
+    color:var(--muted);
+    font-family:'Cinzel', serif;
+    font-size:0.78rem;
+    font-weight:600;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .level-chip.active{
+    background:radial-gradient(circle at 35% 30%, var(--gold-bright), var(--gold) 60%, var(--gold-deep) 100%);
+    color:#241608;
+    border-color:transparent;
+    box-shadow:0 4px 14px rgba(217,178,95,0.28);
+  }
+
+  /* Ability card */
+  .card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:14px;
+    margin-bottom:12px;
+    overflow:hidden;
+  }
+  .card-head{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:14px 16px;
+    cursor:pointer;
+  }
+  .card-title-wrap{ flex:1; min-width:0; }
+  .card-name{
+    font-family:'Cinzel', serif;
+    font-size:1rem;
+    color:var(--gold-bright);
+    margin:0 0 4px;
+    line-height:1.25;
+  }
+  .card-resumo{
+    font-size:0.86rem;
+    color:var(--cream);
+    opacity:0.85;
+    line-height:1.4;
+    margin:0;
+  }
+  .gasto-pill{
+    flex:none;
+    font-size:0.68rem;
+    color:var(--ember);
+    background:var(--ember-soft);
+    border:1px solid rgba(193,80,46,0.35);
+    padding:4px 8px;
+    border-radius:999px;
+    white-space:nowrap;
+    font-weight:600;
+  }
+  .chevron{
+    flex:none;
+    width:18px;height:18px;
+    color:var(--muted);
+    transition:transform .25s ease;
+  }
+  .card.open .chevron{ transform:rotate(180deg); }
+
+  .card-body{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .3s ease;
+    border-top:0 solid var(--border);
+  }
+  .card.open .card-body{ border-top:1px solid var(--border); }
+  .card-body-inner{ padding:14px 16px 18px; }
+  .original-label{
+    font-size:0.72rem;
+    font-style:italic;
+    color:var(--muted);
+    margin:0 0 8px;
+  }
+  .original-text{
+    font-size:0.88rem;
+    line-height:1.62;
+    color:var(--cream);
+    margin:0;
+  }
+
+  /* Tier sub-tabs (Alteração Corporal) */
+  .tiers{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    margin:14px 0 12px;
+  }
+  .tier-btn{
+    font-family:'Work Sans', sans-serif;
+    font-size:0.74rem;
+    font-weight:600;
+    color:var(--muted);
+    background:var(--panel-2);
+    border:1px solid var(--border);
+    border-radius:999px;
+    padding:6px 12px;
+    cursor:pointer;
+  }
+  .tier-btn.active{
+    color:#241608;
+    background:var(--gold);
+    border-color:var(--gold);
+  }
+
+  /* Mecânica tab */
+  .mec-intro p{
+    font-size:0.9rem;
+    line-height:1.6;
+    color:var(--cream);
+    opacity:0.9;
+  }
+  .mec-title{
+    font-family:'Cinzel', serif;
+    color:var(--gold-bright);
+    font-size:1.1rem;
+    margin:4px 0 10px;
+  }
+  .timeline{
+    position:relative;
+    margin-top:18px;
+    padding-left:34px;
+  }
+  .timeline::before{
+    content:'';
+    position:absolute;
+    left:13px; top:6px; bottom:6px;
+    width:2px;
+    background:linear-gradient(180deg, var(--gold), var(--ember));
+    opacity:0.5;
+  }
+  .t-item{ position:relative; margin-bottom:22px; }
+  .t-item:last-child{ margin-bottom:0; }
+  .t-node{
+    position:absolute;
+    left:-34px; top:2px;
+    width:28px;height:28px;
+    border-radius:50%;
+    background:var(--panel);
+    border:2px solid var(--gold);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .t-node.final{ border-color:var(--ember); }
+  .t-node svg{ width:13px;height:13px; }
+  .t-pct{
+    font-family:'Cinzel', serif;
+    font-size:1.7rem;
+    color:var(--gold-bright);
+    line-height:1;
+    margin:0 0 2px;
+  }
+  .t-item.final .t-pct{ color:var(--ember); font-size:1.15rem; }
+  .t-name{
+    font-size:0.78rem;
+    color:var(--muted);
+    text-transform:lowercase;
+    margin:0 0 6px;
+  }
+  .t-text{
+    font-size:0.87rem;
+    line-height:1.55;
+    color:var(--cream);
+    opacity:0.9;
+    margin:0;
+  }
+
+  footer{
+    padding:26px 20px 10px;
+    text-align:center;
+  }
+  footer p{
+    font-size:0.7rem;
+    color:var(--muted);
+    opacity:0.7;
+    line-height:1.5;
+  }
+  footer p.rights{
+    max-width:380px;
+    margin:0 auto 14px;
+    opacity:0.55;
+  }
+  .discord-link{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family:'Cinzel', serif;
+    font-size:0.76rem;
+    font-weight:600;
+    color:var(--gold-bright);
+    text-decoration:none;
+    border:1px solid var(--border-strong);
+    border-radius:999px;
+    padding:8px 16px;
+    transition:background .2s ease;
+  }
+  .discord-link:hover{ background:var(--panel-2); }
+  .discord-link svg{ width:14px;height:14px; flex:none; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <div class="crest">
+      <div class="crest-mark">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#3a2a10" stroke-width="1.5"/></svg>
+      </div>
+      <div>
+        <h1>Mãe-do-Ouro</h1>
+        <div class="kicker">Guia da linhagem · descendentes</div>
+      </div>
+    </div>
+
+    <div class="tabs" id="tabs">
+      <button class="tab-btn active" data-tab="mecanica">Mecânica</button>
+      <button class="tab-btn" data-tab="passivas">Passivas</button>
+      <button class="tab-btn" data-tab="ativas">Ativas</button>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- MECÂNICA -->
+    <section class="panel active" id="panel-mecanica">
+      <div class="mec-intro">
+        <p>A Mãe-do-Ouro é eterna. Seu corpo original não pode ser destruído por nenhum mortal ou ser divino que deseje desestabilizar seus metais, com exceção de certos seres. Com isso, ela passou uma bênção para seus filhos: o dom de renascer.</p>
+        <p>Quando o corpo físico de uma prole cai em combate, ele se torna um pequeno monte de pó de ouro maciço. Se esse pó for completamente recuperado e levado a uma forja, a prole pode renascer — mas cada renascimento cobra um preço maior que o anterior.</p>
+      </div>
+
+      <div class="mec-title">Coração-do-Ouro</div>
+
+      <div class="timeline" id="timeline"></div>
+    </section>
+
+    <!-- PASSIVAS -->
+    <section class="panel" id="panel-passivas">
+      <div class="levels" id="levels-passivas"></div>
+      <div id="cards-passivas"></div>
+    </section>
+
+    <!-- ATIVAS -->
+    <section class="panel" id="panel-ativas">
+      <div class="levels" id="levels-ativas"></div>
+      <div id="cards-ativas"></div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>Guia de referência rápida — toque em uma habilidade para ver o texto completo.</p>
+    <a class="discord-link" href="https://discord.gg/ngNrkVCA8" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M18.5 6.5c-1.2-.6-2.5-1-3.9-1.2l-.2.4c1.2.3 2.3.8 3.3 1.5-2.9-1.4-6.4-1.4-9.3 0 1-.7 2.1-1.2 3.3-1.5l-.2-.4c-1.4.2-2.7.6-3.9 1.2C4 10 3.4 13.4 3.7 16.7c1.5 1.1 2.9 1.8 4.3 2.2l.6-1c-.8-.3-1.5-.6-2.2-1.1.2-.1.4-.3.5-.4 3.4 1.6 7.1 1.6 10.4 0 .2.1.3.3.5.4-.7.5-1.4.8-2.2 1.1l.6 1c1.4-.4 2.8-1.1 4.3-2.2.4-3.8-.6-7.1-2.7-10.2zM9.5 14.7c-.8 0-1.5-.8-1.5-1.7s.7-1.7 1.5-1.7 1.5.8 1.5 1.7-.7 1.7-1.5 1.7zm5 0c-.8 0-1.5-.8-1.5-1.7s.7-1.7 1.5-1.7 1.5.8 1.5 1.7-.7 1.7-1.5 1.7z" fill="currentColor"/></svg>
+      Acampamento Ybytuara
+    </a>
+    <p class="rights">Todo o conteúdo desta linhagem pertence exclusivamente ao servidor "Acampamento Ybytuara", protegido pela Lei de Direitos Autorais (Lei 9610/98). O material é propriedade do servidor de forma definitiva e intransferível, não sendo aceitos pedidos de remoção ou atribuição de autoria fora dele.</p>
+  </footer>
+</div>
+
+<script>
+/* ---------- DADOS ---------- */
+
+const mortes = [
+  {pct:'75%', nome:'primeira morte', texto:'Ao renascer, a prole volta com apenas 75% dos níveis que possuía antes de morrer, mantendo todas as suas memórias e habilidades adquiridas, porém mais fraca do que antes.'},
+  {pct:'50%', nome:'segunda morte', texto:'O renascimento traz de volta a prole com 50% de seus níveis originais e apenas dois terços de suas memórias. Lembranças importantes podem se perder, rostos de aliados podem ser esquecidos e partes de sua história pessoal viram um vazio.'},
+  {pct:'25%', nome:'terceira morte', texto:'Na última chance de retornar, a prole revive com apenas 25% de seus níveis e sem nenhuma memória. Não se lembra de quem era, de seus amigos, de sua mãe ou de suas missões. Torna-se uma casca dourada que precisa reconstruir tudo do zero, guiada apenas por instintos herdados da linhagem.'},
+  {pct:'fim', nome:'quarta morte', texto:'Se a prole morrer uma quarta vez, não há mais retorno. O pó de ouro se torna tão fino e escasso que não pode mais ser forjado. A alma se dispersa e o filho da Mãe-do-Ouro deixa de existir para sempre, como ouro gasto que perdeu seu brilho.', final:true}
+];
+
+const passivas = [
+  {nivel:0, itens:[
+    {nome:'Visão Dourada', resumo:'Perto de ouro verdadeiro, a visão vira quase monocromática — só o metal aparece em cor — e funciona também como visão no escuro.',
+     texto:'A Mãe-do-Ouro é uma mulher que protege locais com recursos e minerais valiosos de pessoas gananciosas, utilizando de suas habilidades místicas para afastar pessoas de pilhas de ouro e outros minerais que poderiam tornar o homem rico e poderoso. Por outro lado, acaba atraindo pessoas puras de coração para suas fontes de minérios, entregando-lhes sua riqueza em troca de nunca revelarem de verdade como ficaram ricos. Com isso, as proles da Mãe-do-Ouro possuem uma capacidade especial: quando estiverem próximos de ouro natural, seus olhos começarão a brilhar em amarelo e o mundo em volta deles se tornará cinza, onde o único ponto colorido será o ouro, podendo distinguir o falso do verdadeiro. Essa capacidade também permite que eles enxerguem até nos locais mais escuros e na pior penumbra que existe.'},
+    {nome:'Magnificência do Ouro', resumo:'Armas com ouro na composição rendem 25% a mais de proficiência em combate.',
+     texto:'A Mãe-do-Ouro tem um grande conhecimento sobre tesouros escondidos, tumbas cheias de recompensas e até joias perdidas que estão enterradas no palmo mais profundo da terra. Contendo ouro ou não, mas, definitivamente, quando está guardando algum tesouro fielmente, ela acaba por se fascinar pelo ouro. Ela normalmente está cheia de acessórios dourados, até mesmo suas armas são feitas de puro ouro ou possuem o minério natural como decoração. Assim, suas proles acabam adquirindo o mesmo fascínio, parecendo até mesmo que ficam melhores ao empunharem armas feitas de ouro ou que possuem ouro em sua composição. Quando estão com armas que possuem uma pequena quantidade de ouro ou até mesmo são feitas de ouro, eles adquirem 25% mais de proficiência, como se o ouro auxiliasse em suas batalhas.'}
+  ]},
+  {nivel:5, itens:[
+    {nome:'Resistência ao calor', resumo:'Suporta até 900°C sem ferimentos graves e ganha 45% a mais de resistência contra ataques de fogo.',
+     texto:'A Mãe-do-Ouro é conhecida por se transformar em uma bola de fogo em uma temperatura altíssima. Aqueles que a veem confundem até com óvnis ou estrelas cadentes; ela brilha pelo céu noturno em toda a região brasileira. As proles da Mãe-do-Ouro adquirem a mesma capacidade de se transformarem em bolas de fogo voadoras. Por isso, acabam adquirindo uma imensa resistência ao calor, não sofrendo penalidades por temperaturas altas, podendo aguentar até seus 900°C antes que comecem a ter ferimentos graves ou queimaduras. Além disso, terão 45% mais de resistência contra ataques envolvendo fogo.'},
+    {nome:'Ganância I', resumo:'Detecta ganância no coração dos inimigos e ganha +25% em combate e defesa contra eles.',
+     texto:'A Mãe-do-Ouro protege fortunas e riquezas de pessoas gananciosas, impedindo que qualquer ser encontre uma mínima moeda de ouro caso possua ganância e um coração impuro. Suas proles conseguem analisar o coração das pessoas e perceber se há ganância nelas. Quando estão lutando contra seres gananciosos ou que buscam poder, adaptando-se para proteger mais do que apenas os minérios, acabam recebendo um bônus de +25% em suas capacidades de combate e defesa. Esse instinto natural permite que eles se protejam contra gananciosos e outros seres mal-intencionados.'}
+  ]},
+  {nivel:10, itens:[
+    {nome:'Coleta de Recursos', resumo:'Conhecimento inato sobre minérios (cor, dureza, densidade etc.), útil para coletar recursos e forjar equipamentos.',
+     texto:'Por serem filhos da própria mãe-do-ouro, protetora das riquezas, todos os filhos são agraciados com um conhecimento inato de minérios e materiais, sendo muito úteis na hora de coletar recursos, principalmente minérios, onde sabem exatamente a cor, brilho (metálico/não metálico), traço (cor do pó), dureza (escala de Mohs), clivagem (quebra plana), densidade, magnetismo e tenacidade. Essa capacidade permite que eles consigam até forjar seus próprios equipamentos e armas por terem um vasto conhecimento sobre todos os minérios existentes, até os divinos que ainda não foram ou não podem ser obtidos.'},
+    {nome:'Idioma da Terra', resumo:'Facilidade natural para aprender novos idiomas, tornando-se poliglota com rapidez.',
+     texto:'Pela Mãe-do-Ouro não existir unicamente no território brasileiro, ela adquiriu um vasto conhecimento de outras línguas e formas para se comunicar, já que se transformou diversas vezes em mulheres bonitas para atrair homens e até outras mulheres para longe de minérios naturais, impedindo que os impuros de coração ficassem ricos. Desta forma, seus filhos aprendem novas línguas com uma gigantesca facilidade, facilmente se tornando poliglotas.'}
+  ]},
+  {nivel:15, itens:[
+    {nome:'Vigor do Ouro', resumo:'Sobrevive até três semanas sem comer, beber ou fazer necessidades antes de sentir os efeitos.',
+     texto:'A Mãe-do-Ouro não é uma humana; às vezes até mesmo pode se transformar em uma estátua e ficar imóvel por dias ou meses, sem necessidade de se alimentar ou se aliviar de forma natural. Seus filhos também conseguirão desenvolver uma capacidade de aguentar longos períodos sem ter que comer ou beber água, e também sem precisar usar o banheiro. Eles podem aguentar até três semanas sem suas necessidades básicas; depois disso, começarão a sofrer os efeitos da desidratação e da desnutrição, começando a perder massa muscular e gordura, até que morram de fome, caso não se alimentem.'},
+    {nome:'Resistência Corporal', resumo:'Resiste a 35% de impactos físicos, chegando a 70% conforme sobe de nível (+5% a cada 10 níveis).',
+     texto:'Por serem filhos de uma mulher que pode ser considerada "puro ouro", os corpos das proles da Mãe-do-Ouro são mais resistentes do que outras semi-lendas, podendo resistir a até 35% de impactos e ataques corporais lançados contra eles. Quanto mais forte ficam, mais seus corpos ficam resistentes, recebendo +5% de resistência a cada 10 níveis, podendo chegar a até 70% de resistência contra golpes físicos.'}
+  ]},
+  {nivel:20, itens:[
+    {nome:'Lucrando recompensas', resumo:'+25% de recompensas em missões que envolvam itens valiosos, como ouro, joias ou cruzeiros.',
+     texto:'A Mãe-do-Ouro também tem a capacidade de gerar e criar riquezas incríveis, multiplicando fortuna da forma que desejar para sempre ter algo em que ela possa depositar sua proteção. Por isso, seus filhos possuem uma afinidade inata com a prosperidade, sendo naturalmente atraídos por oportunidades de obter riquezas e favorecidos quando as buscam. Essa conexão mística com a fortuna se manifesta de forma prática: eles recebem +25% a mais de recompensas em qualquer tipo de missão, busca ou tarefa que envolva a obtenção de itens valiosos, como ouro, cruzeiros, joias ou qualquer outro recurso de alto valor.'},
+    {nome:'Retendo Calor', resumo:'Mantém o corpo aquecido (até 56°C) para resistir a climas frios e congelantes.',
+     texto:'Os filhos da Mãe-do-Ouro podem reter calor e deixar seus corpos mais quentes que o normal, sendo algo que podem fazer para resistir a ambientes frios e até congelantes. Por mais que não haja estado que chegue no nível de nevar constantemente no território brasileiro, eles utilizam essa capacidade quando precisam adentrar locais mais frios que o comum, como até mesmo os templos de Jaci, onde a temperatura pode diminuir drasticamente. Eles poderão chegar a até 56°C retendo calor, diminuindo conforme passam tempo no frio.'}
+  ]},
+  {nivel:25, itens:[
+    {nome:'Ferimentos Dourados', resumo:'Ferimentos viram ouro e curam 15% do HP por turno — 25% perto de fontes de calor.',
+     texto:'A pele dos filhos da Mãe-do-Ouro tem uma cor dourada, por mais melanina que possuam, suas peles tem uma coloração dourada que auxilia muito na hora de combates e de descanso. Como não tem corpos totalmente humanoides, quando se ferem, lentamente uma camada de ouro começa a cobrir os ferimentos e passa a curá-los passivamente. Todos os ferimentos começam a se tornar dourados e possuem pequenas partículas de ouro mágico que cura as proles, regenerando 15% de seu HP por turno. Agora, caso estejam próximos de fontes de calor (fogueiras e outras fontes maiores), recebem 25%.'},
+    {nome:'Cabelos de Fogo', resumo:'Na escuridão, os cabelos emitem um brilho dourado que ilumina o ambiente ao redor.',
+     texto:'Os cabelos dos filhos da Mãe-do-Ouro são naturalmente brilhantes e impressionantes, refletindo a herança dourada que carregam em suas essências. Em momentos de escuridão intensa, porém, essa característica estética se transforma em uma habilidade funcional: seus cabelos passam a emitir um brilho dourado e suave, capaz de iluminar o ambiente ao redor.'}
+  ]}
+];
+
+const ativas = [
+  {nivel:0, itens:[
+    {nome:'Toque Dourado I', gasto:'100 por item', resumo:'Transforma objetos pequenos em ouro puro; se for comida, recupera 15% dos status ao consumir.',
+     texto:'A Mãe-do-Ouro tem um corpo feito de diversos metais, mas principalmente o ouro, sendo até mesmo um dos motivos do seu nome. Ela possui capacidades impressionantes de controlar metais e, principalmente, transformar certas coisas em ouro. Suas proles conseguem tocar em certas coisas e transformá-las em puro ouro. Neste nível, conseguem transformar qualquer objeto pequeno em ouro: colheres, maçãs ou pedras pequenas. Ao transformar algo em ouro, ainda pode ser consumido (caso seja alimento), recuperando 15% de todos os seus status, e também poderão utilizar como moeda de troca no mundo mortal.'},
+    {nome:'Bola de Fogo I', gasto:'250', resumo:'Transforma o corpo em um orbe de fogo voador (até 100 km/h), mas impede o uso de outras habilidades ou ataques.',
+     texto:'A lenda original conta a história de uma bola de fogo que cruza os céus noturnos das matas, algo que parece um pássaro de fogo ou um orbe de luz brilhante. Muitas pessoas associam esse orbe luminoso a um óvni (objeto voador não identificado). As proles da Mãe-do-Ouro poderão transformar seus corpos em orbes de fogo luminosos, podendo voar livremente pelos céus enquanto estiverem nessa forma, chegando a velocidades de até 100 km/h ao se movimentarem pelo ar. Quando estão nessa forma, não podem utilizar habilidades comuns nem atacar, apenas poderão usar seu corpo como forma de impacto, ainda sofrendo com o dano de impacto.'}
+  ]},
+  {nivel:5, itens:[
+    {nome:'Pirocinese I', gasto:'100', resumo:'Cria e lança bolas de fogo das mãos em linha reta, sem dano especial nesse nível.',
+     texto:'A Mãe-do-Ouro pode controlar o fogo e utilizá-lo da forma que quiser, sendo uma das formas de afastar pessoas de seus tesouros, colocando fogo na mata que impede qualquer um de passar. Seus filhos conseguiram puxar esse traço de controlar o fogo no ambiente, eles poderão gerar bolas de fogo direto de suas mãos e direcioná-las em uma direção para atacar inimigos. Neste nível, o fogo não causará dano especial e só poderá seguir na direção lançada, sem ter seu trajeto alterado de forma alguma.'},
+    {nome:'Alteração Corporal', gasto:'250 (base)', resumo:'Transforma partes do corpo em armas de metal; evolui em três estágios até criar armas de fogo integradas ao corpo.',
+     texto:'Pelo fato de que o corpo da Mãe-do-Ouro é feito de diversos metais, ela pode alterar partes de seu corpo para auxiliar no combate, transformando sua mão em martelo, em espada e em outros diversos tipos de armamentos brancos. Seus filhos conseguem realizar a mesma capacidade, evoluindo conforme ganham experiência e fortalecem seu vínculo com a linhagem. Neste nível inicial, conseguem criar armamentos simples como facas, martelos e facões, ideais para combates corpo a corpo contra criaturas menores ou humanos. A transformação é rápida e gasta pouca energia, já que o metal utilizado vem do próprio corpo da prole.',
+     tiers:[
+       {label:'Base', gasto:'250', texto:'Pelo fato de que o corpo da Mãe-do-Ouro é feito de diversos metais, ela pode alterar partes de seu corpo para auxiliar no combate, transformando sua mão em martelo, em espada e em outros diversos tipos de armamentos brancos. Neste nível inicial, conseguem criar armamentos simples como facas, martelos e facões, ideais para combates corpo a corpo contra criaturas menores ou humanos. A transformação é rápida e gasta pouca energia, já que o metal utilizado vem do próprio corpo da prole.'},
+       {label:'Nível 50', gasto:'500', texto:'A habilidade se aprimora: já conseguem forjar armas mais pesadas e imponentes, como marretas, marretas enormes e espadas longas. Essas armas causam maior dano e possuem alcance estendido, mas exigem mais controle e resistência física para serem empunhadas por longos períodos.'},
+       {label:'Nível 75', gasto:'750', texto:'A manipulação metálica se estende ao próprio tamanho corporal. A prole pode alterar sua altura para até cinco metros, tornando-se uma figura colossal no campo de batalha. Essa capacidade não apenas aumenta o alcance dos golpes, mas também intimida adversários e permite atingir seres voadores ou montados com mais facilidade. O peso e a massa aumentam proporcionalmente, conferindo maior resistência a impactos.'},
+       {label:'Nível 100', gasto:'100', texto:'A prole atinge o ápice dessa habilidade: poderá invocar armas de fogo diretamente de seus braços, como revólveres antigos, arcos e flechas, e até canhões. Essas armas não precisam de munição externa, pois disparam o próprio metal gerado pelo corpo da prole, na mesma intensidade e potência que uma arma convencional. Cada disparo consome uma pequena quantidade do corpo metálico da prole, que pode ser regenerada com descanso ou consumo de ouro.'}
+     ]}
+  ]},
+  {nivel:10, itens:[
+    {nome:'Controle do Minério I', gasto:'200 (varia por minério)', resumo:'Molda e lança minérios básicos (ferro, ouro, prata, cobre, estanho, chumbo, bronze) para atacar ou defender.',
+     texto:'A Mãe-do-Ouro é uma mestra natural do controle de minérios, sendo a principal forma que ela utiliza para moldar seu próprio corpo, às vezes uma estátua de ouro ou de prata, um grande amontoado de moedas de cobre. Essa capacidade de controle do minério permite que ela molde e consiga utilizar o minério para atacar ou se defender. Suas proles possuem uma capacidade pequena: neste nível, de controlar os minérios mais básicos e conhecidos como ferro, ouro, prata, cobre, estanho, chumbo e bronze. Eles poderão moldar o material de forma limitada, podendo transformá-los em líquidos ou deixá-los mais afiados e lançá-los nos inimigos.'},
+    {nome:'Deslizamento de Terra', gasto:'700', resumo:'Provoca pequenos deslizamentos de terra para atrapalhar inimigos ou controlar rochas e pedregulhos.',
+     texto:'A versão mais contada da lenda da Mãe-do-Ouro narra que um escravo, sempre castigado por seu dono, procurava desesperadamente ouro na floresta. Ao se aproximar de uma montanha, avistou a Mãe-do-Ouro, que lhe indicou um local onde deveria cavar, com a condição de não contar a ninguém. Ele encontrou grande quantidade de ouro e levou ao seu dono, que exigiu saber a localização. Após ser chicoteado várias vezes, o escravo contou. O patrão correu para o local e abriu uma mina. Como punição, a Mãe-do-Ouro provocou o desmoronamento da mina, matando o dono do escravo. Desta forma, os filhos da Mãe-do-Ouro conseguem provocar leves deslizamentos de terra para atrapalhar inimigos ou controlar pequenas quantidades de rochas e pedregulhos.'}
+  ]},
+  {nivel:15, itens:[
+    {nome:'Multi Combatente', gasto:'200 por braço', resumo:'Cria braços e pernas extras, permitindo até 4 ataques por rodada; os membros duram 2 turnos.',
+     texto:'A Mãe-do-Ouro é extremamente versátil em combates, sendo uma grande mestra pelo fato de sua existência longa ter permitido que ela conseguisse proteger cada tesouro que não deveria ser encontrado no Brasil. Desta forma, seus filhos aprendem formas de combate muito poderosas, formas essas até mesmo superiores às de qualquer mestre do combate. Eles conseguem moldar seus corpos e criar braços extras, podendo atacar até quatro vezes durante uma rodada. Esses braços duram dois turnos e podem ser recriados apenas após duas rodadas de um combate. Além disso, também conseguem realizar feitos grandiosos, criando duas pernas extras para ter mais agilidade e mobilidade dentro de um combate, podendo moldar e mover esses membros como querem.'},
+    {nome:'Toque Dourado II', gasto:'200 por item', resumo:'Transforma objetos médios em ouro; como arma causa +25% de dano, como alimento recupera 25% dos status.',
+     texto:'A Mãe-do-Ouro tem um corpo feito de diversos metais, mas principalmente o ouro, sendo esse um dos motivos do seu nome. Ela possui capacidades impressionantes de controlar metais e transformar certas coisas em ouro. Suas proles, ao atingirem este nível 2, despertam uma versão inicial dessa habilidade: conseguem tocar em objetos médios e transformá-los em puro ouro: cadeiras, banquetas, mesas de cabeceira, almofadas, abajures. Além de transformá-los, o objeto, caso seja lançado ou utilizado como arma, causará 25% mais de dano por ser um metal. Ao transformar um alimento em ouro, ele ainda pode ser consumido caso a prole deseje, recuperando 25% de todos os seus status, como HP, mana e stamina. Além disso, os objetos dourados podem ser utilizados como moeda de troca no mundo mortal, já que o ouro gerado é indistinguível do natural para a maioria das pessoas.'}
+  ]},
+  {nivel:20, itens:[
+    {nome:'Ouro Corporal', gasto:'350 por turno mantido', resumo:'Molda o corpo inteiro em ouro — garras, asas, escudos ou lâminas — mas drena energia continuamente enquanto mantido.',
+     texto:'Os filhos da Mãe-do-Ouro conseguem moldar seus corpos da forma que desejarem, desde que transformem seus corpos em puro ouro para realizar tais alterações. Essa metamorfose dourada é limitada apenas pela criatividade e controle mental da prole, permitindo feitos impressionantes que antes pertenciam exclusivamente a outras linhagens. Quando uma prole da Mãe-do-Ouro precisa escalar uma montanha íngreme, ele pode mentalmente moldar garras de ouro em seus dedos para se fixar nas rochas e gerar asas douradas em suas costas para planar entre os picos; ao atravessar um pântano traiçoeiro, pode criar botas largas e ocas de ouro para não afundar na lama ou até mesmo transformar suas pernas em longas hastes metálicas para caminhar sobre o leito lamacento como se fosse solo firme; em combate, pode endurecer partes específicas do corpo, como antebraços transformados em escudos dourados ou punhos que viram maças maciças para esmagar adversários; em situações de fuga, pode achatar seu corpo inteiro como uma fina lâmina de ouro para esgueirar-se por frestas estreitas ou esticar seus membros como cordas metálicas para alcançar objetos distantes sem mover o tronco. Essa maleabilidade corporal, no entanto, exige concentração ativa e consome energia da prole: manter formas complexas como asas funcionais ou membros alongados drena gradualmente seus status, e transformações muito drásticas ou prolongadas podem deixá-lo exausto, obrigando-o a retornar à sua forma original de carne e osso para descansar e se regenerar.'},
+    {nome:'Pirocinese II', gasto:'250', resumo:'Cria paredes e ondas de fogo de até 2m, com trajetória ajustável e queimaduras que reduzem a regeneração inimiga; ganha 15% de resistência a fogo.',
+     texto:'A Mãe-do-Ouro pode controlar o fogo e utilizá-lo da forma que quiser, sendo uma das formas de afastar pessoas de seus tesouros, colocando fogo na mata que impede qualquer um de passar. Seus filhos, ao atingirem este nível, aprimoram o controle sobre as chamas. Agora, além de gerar bolas de fogo pelas mãos, eles podem moldar o fogo em pequenas ondas ou paredes de chama de até dois metros de extensão, bloqueando passagens ou cercando inimigos. As bolas de fogo causam dano moderado e podem ter seu trajeto levemente alterado após o lançamento, permitindo curvas suaves ou perseguição básica a alvos lentos. O fogo neste nível é mais poderoso e causa pequenas queimaduras que reduzem a regeneração de vida do oponente por um turno. Além disso, a prole adquire resistência passiva ao fogo, sofrendo 15% menos dano de fontes ígneas.'}
+  ]}
+];
+
+/* ---------- RENDER ---------- */
+
+function chevronSvg(){
+  return '<svg class="chevron" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+}
+
+function buildTimeline(){
+  const el = document.getElementById('timeline');
+  el.innerHTML = mortes.map(m => `
+    <div class="t-item ${m.final ? 'final' : ''}">
+      <div class="t-node ${m.final ? 'final' : ''}">
+        ${m.final ? '<svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="#c1502e" stroke-width="2" stroke-linecap="round"/></svg>' : ''}
+      </div>
+      <div class="t-pct">${m.pct}</div>
+      <div class="t-name">${m.nome}</div>
+      <p class="t-text">${m.texto}</p>
+    </div>
+  `).join('');
+}
+
+function cardHtml(item, gasto){
+  const tiersHtml = item.tiers ? `
+    <div class="tiers" data-tiers>
+      ${item.tiers.map((t,i)=>`<button class="tier-btn ${i===0?'active':''}" data-tier="${i}">${t.label}</button>`).join('')}
+    </div>
+    <div class="original-text" data-tier-text>${item.tiers[0].texto}</div>
+    <p class="original-label" style="margin-top:10px;">Gasto: <span data-tier-gasto>${item.tiers[0].gasto}</span></p>
+  ` : '';
+
+  return `
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title-wrap">
+          <p class="card-name">${item.nome}</p>
+          <p class="card-resumo">${item.resumo}</p>
+        </div>
+        ${gasto ? `<span class="gasto-pill">${gasto}</span>` : ''}
+        ${chevronSvg()}
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <p class="original-label">Texto original</p>
+          <p class="original-text">${item.texto}</p>
+          ${tiersHtml}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function buildSection(data, levelsElId, cardsElId){
+  const levelsEl = document.getElementById(levelsElId);
+  const cardsEl = document.getElementById(cardsElId);
+
+  levelsEl.innerHTML = data.map((d,i)=>`<button class="level-chip ${i===0?'active':''}" data-idx="${i}">${d.nivel}</button>`).join('');
+
+  function renderLevel(idx){
+    cardsEl.innerHTML = data[idx].itens.map(item => cardHtml(item, item.gasto)).join('');
+  }
+  renderLevel(0);
+
+  levelsEl.addEventListener('click', e=>{
+    const btn = e.target.closest('.level-chip');
+    if(!btn) return;
+    levelsEl.querySelectorAll('.level-chip').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderLevel(Number(btn.dataset.idx));
+  });
+
+  cardsEl.addEventListener('click', e=>{
+    const tierBtn = e.target.closest('.tier-btn');
+    if(tierBtn){
+      const card = tierBtn.closest('.card');
+      const idx = Number(tierBtn.dataset.tier);
+      const wrap = tierBtn.closest('[data-tiers]');
+      wrap.querySelectorAll('.tier-btn').forEach(b=>b.classList.remove('active'));
+      tierBtn.classList.add('active');
+      const body = card.querySelector('.card-body-inner');
+      const itemNome = card.querySelector('.card-name').textContent;
+      const activeChip = document.getElementById(levelsElId).querySelector('.level-chip.active');
+      const lvlIdx = Number(activeChip.dataset.idx);
+      const src = data[lvlIdx].itens.find(it=>it.nome===itemNome);
+      const tier = src.tiers[idx];
+      body.querySelector('[data-tier-text]').textContent = tier.texto;
+      body.querySelector('[data-tier-gasto]').textContent = tier.gasto;
+      card.style.setProperty('--recalc','1');
+      if(card.classList.contains('open')){
+        body.parentElement.style.maxHeight = body.parentElement.scrollHeight + 'px';
+      }
+      e.stopPropagation();
+      return;
+    }
+    const head = e.target.closest('.card-head');
+    if(!head) return;
+    const card = head.closest('.card');
+    const body = card.querySelector('.card-body');
+    const isOpen = card.classList.contains('open');
+    if(isOpen){
+      card.classList.remove('open');
+      body.style.maxHeight = null;
+    } else {
+      card.classList.add('open');
+      body.style.maxHeight = body.scrollHeight + 'px';
+    }
+  });
+}
+
+/* Tabs */
+document.getElementById('tabs').addEventListener('click', e=>{
+  const btn = e.target.closest('.tab-btn');
+  if(!btn) return;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+});
+
+buildTimeline();
+buildSection(passivas, 'levels-passivas', 'cards-passivas');
+buildSection(ativas, 'levels-ativas', 'cards-ativas');
+</script>
+</body>
+</html>
